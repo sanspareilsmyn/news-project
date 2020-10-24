@@ -34,7 +34,11 @@
 데이터셋은 2개를 사용하였다.  
 1) [BBC News Summary](https://www.kaggle.com/pariza/bbc-news-summary)  
 뉴스 본문을 Input으로 주었을 때 요약된 뉴스를 Output으로 출력하는 알고리즘을 검증하기 위해 사용하였다.
-2225개의 본문-요약 쌍이 데이터셋으로 제공되었다.
+2225개의 본문-요약 쌍이 데이터셋으로 제공되었다.  
+
+++ 20.10.24.  
+News Articles/sport/199.txt가 유니코드 인코딩이 되어 있지 않아 파일이 열리지 않는 버그를 찾았다.  
+해당 txt 파일과 summaries 폴더 내 상응하는 txt 파일을 제거하고 실험을 진행하였다.  
 
 2) [All the News](https://www.kaggle.com/snapcrack/all-the-news)  
 서비스가 제공되는 플랫폼에서 데이터를 받아왔다고 가정했다. 뉴스 제목과 본문이 데이터셋에 들어있다.   
