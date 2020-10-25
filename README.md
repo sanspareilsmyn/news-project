@@ -1,4 +1,4 @@
-# News Title Autocompletion and News Summarization with RNN and Transfer Learning  
+# News Title Autocompletion and Transformer-based News Summarization. 
 
 ## Contents
 1. [Problem Definition](#Problem-Definition)
