@@ -1,6 +1,6 @@
 # News Title Autocompletion and Transformer-based News Summarization.  
 
-Ongoing Projects! 개발 중인 프로젝트입니다!
+Ongoing Project! 개발 중인 프로젝트입니다!
 
 ## Contents
 1. [Problem Definition](#Problem-Definition)
