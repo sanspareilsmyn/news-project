@@ -1,4 +1,6 @@
-# News Title Autocompletion and News Summarization with RNN and Transfer Learning  
+# News Title Autocompletion and Transformer-based News Summarization.  
+
+Ongoing Project! 개발 중인 프로젝트입니다!
 
 ## Contents
 1. [Problem Definition](#Problem-Definition)
@@ -28,6 +30,10 @@
 따라서, 끝자리부터 빠르게 검색해서 문장의 중심으로 빠르게 넘어갈 수 있는 Boyer-Moore Algorithm을 채택하기로 했다.  
 
 2) 뉴스 본문 요약 기능  
+1026  
+아키텍처
+내가 튜닝한 Transformer랑 Fork한 BART랑 성능 비교. 물론 BART가 월등히 높겠지만 Transfer learning으로 다른 모델 위에 내 레이어 올려서 어디까지 비슷하게 끌어올리나 체크하는 걸 1차 목표  
+
 
 
 ## Datasets  
