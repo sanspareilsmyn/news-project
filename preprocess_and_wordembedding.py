@@ -1,8 +1,11 @@
 import pathlib
 import os
 import re
+import pandas as pd
+import numpy as np
 import tensorflow as tf
-import tensorflow_hub as hub
+from keras.preprocessing.text import Tokenizer
+
 
 '''''''''''''''
 1. Data Loading
@@ -27,8 +30,7 @@ def generate_data(folder):
             data.append(text)
         except:
             continue
-    print("Task Finished!")
-    print(str(count) + " text files")
+    print(str(count) + " text files loaded!")
     
     return data, count
 
@@ -70,13 +72,56 @@ for i in range(len(summaries)):
 
 
 '''''''''''''''
-3. Word Embedding by using pretrained model (Token based text embedding trained on English Google News 7B corpus.)
+3. Word Embedding 
 '''''''''''''''
 
-embedding = "https://tfhub.dev/google/nnlm-en-dim50/2"
-embedding_layer = hub.KerasLayer(embedding, input_shape=[],
-                            dtype=tf.string, trainable=True)
+# DataFrame definition(adding 'decoder_input, decoder_target')
+articles = pd.DataFrame(articles)
+summaries = pd.DataFrame(summaries)
+articles_max_len = 20 ### 201029 - For Test! It should be longer when actually training!
+summaries_max_len = 5 ### 201029 - For Test! It should be longer when actually training!
+data = pd.concat([articles, summaries], axis=1)
+data.columns = ['articles', 'summaries']
 
-# Test code
-test_string = tf.keras.preprocessing.text.text_to_word_sequence(articles[0])
-print(embedding_layer(test_string))
+data['decoder_input'] = data['summaries'].apply(lambda x : 'sostoken ' + x)
+data['decoder_target'] = data['summaries'].apply(lambda x: x + 'eostoken')
+encoder_input = np.array(data['articles'])
+decoder_input = np.array(data['decoder_input'])
+decoder_target = np.array(data['decoder_target'])
+
+# Train-test data split
+n_of_val = int(len(encoder_input) * 0.1)
+
+encoder_input_train = encoder_input[:-n_of_val]
+decoder_input_train = decoder_input[:-n_of_val]
+decoder_target_train = decoder_target[:-n_of_val]
+
+encoder_input_test = encoder_input[-n_of_val:]
+decoder_input_test = decoder_input[-n_of_val:]
+decoder_target_test = decoder_target[-n_of_val:]
+
+print('훈련 데이터의 개수 :', len(encoder_input_train))
+print('훈련 레이블의 개수 :', len(decoder_input_train))
+print('테스트 데이터의 개수 :', len(encoder_input_test))
+print('테스트 레이블의 개수 :', len(decoder_input_test))
+
+# Tokenizing Articles
+article_vocab_num = 10000
+article_tokenizer = Tokenizer(num_words=article_vocab_num)
+article_tokenizer.fit_on_texts(encoder_input_train)
+
+encoder_input_train = article_tokenizer.texts_to_sequences(encoder_input_train)
+encoder_input_test = article_tokenizer.texts_to_sequences(encoder_input_test)
+
+# Tokenizing Summaries
+summary_vocab_num = 1000
+summary_tokenizer = Tokenizer(num_words=summary_vocab_num)
+summary_tokenizer.fit_on_texts(decoder_input_train)
+summary_tokenizer.fit_on_texts(decoder_target_train)
+
+decoder_input_train = summary_tokenizer.texts_to_sequences(decoder_input_train)
+decoder_target_train = summary_tokenizer.texts_to_sequences(decoder_target_train)
+decoder_input_test = summary_tokenizer.texts_to_sequences(decoder_input_test)
+decoder_target_test = summary_tokenizer.texts_to_sequences(decoder_target_test)
+
+# Padding tokenized data
